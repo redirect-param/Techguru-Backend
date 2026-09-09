@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Julius Mwangi | Senior Software Engineer & Cloud Architect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="brand-logo">
+                <span class="logo-accent">J</span>ulius <span class="logo-last">Mwangi</span>
+            </a>
+            <nav class="nav-links" id="navLinks">
+                <a href="#about" class="nav-link">About</a>
+                <a href="#skills" class="nav-link">Skills</a>
+                <a href="#experience" class="nav-link">Experience</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#contact" class="nav-link btn-nav">Contact Me</a>
+            </nav>
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="badge"><i class="fa-solid fa-circle-check"></i> Available for Executive Tech Roles & Consulting</div>
+                <h1 class="hero-title">Senior Enterprise Software Engineer & Cloud Architect</h1>
+                <p class="hero-subtitle">
+                    Over 8+ years designing scalable microservices, secure fintech engines, and resilient cloud infrastructure. Transforming corporate vision into high-availability digital solutions.
+                </p>
+                <div class="hero-actions">
+                    <a href="#contact" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Get In Touch</a>
+                    <a href="#projects" class="btn btn-outline"><i class="fa-solid fa-briefcase"></i> View Work</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-num">8+</span>
+                        <span class="stat-label">Years Experience</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num">30+</span>
+                        <span class="stat-label">Enterprise Projects</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num">99.99%</span>
+                        <span class="stat-label">System Uptime</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>About Julius Mwangi</h2>
+                <div class="line"></div>
+            </div>
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="card-icon"><i class="fa-solid fa-layer-group"></i></div>
+                    <h3>Architecture & Engineering</h3>
+                    <p>Specialized in building mission-critical backend systems, fault-tolerant REST/GraphQL APIs, and high-frequency transaction pipelines built with Python, Docker, and AWS.</p>
+                </div>
+                <div class="about-card">
+                    <div class="card-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3>Security & Compliance</h3>
+                    <p>Deep expertise in compliance-driven financial systems, secure authentication protocols, data encryption at rest/transit, and enterprise infrastructure auditing.</p>
+                </div>
+                <div class="about-card">
+                    <div class="card-icon"><i class="fa-solid fa-users-gear"></i></div>
+                    <h3>Leadership & DevOps</h3>
+                    <p>Proven track record leading engineering teams, enforcing continuous integration/deployment (CI/CD) pipelines, and lowering operational infrastructure overhead.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <h2>Core Competencies</h2>
+                <div class="line"></div>
+            </div>
+            <div class="skills-grid">
+                {% for skill in skills %}
+                <div class="skill-card">
+                    <div class="skill-info">
+                        <span class="skill-name">{{ skill.name }}</span>
+                        <span class="skill-badge">{{ skill.category }}</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: {{ skill.proficiency }}%;"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Work History</h2>
+                <div class="line"></div>
+            </div>
+            <div class="timeline">
+                {% for exp in experience %}
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div>
+                                <h3 class="timeline-role">{{ exp.role }}</h3>
+                                <h4 class="timeline-company">{{ exp.company }}</h4>
+                            </div>
+                            <span class="timeline-duration"><i class="fa-regular fa-calendar"></i> {{ exp.duration }}</span>
+                        </div>
+                        <p class="timeline-desc">{{ exp.description }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <h2>Featured Projects</h2>
+                <p class="section-subtitle">Dynamically fetched from backend REST API</p>
+                <div class="line"></div>
+            </div>
+            
+            <div class="project-filters">
+                <button class="filter-btn active" data-filter="all">All Projects</button>
+                <button class="filter-btn" data-filter="Fintech">Fintech</button>
+                <button class="filter-btn" data-filter="Enterprise">Enterprise</button>
+                <button class="filter-btn" data-filter="Cloud">Cloud</button>
+            </div>
+
+            <div class="projects-grid" id="projectsContainer">
+                <div class="loading-state">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i> Loading corporate projects...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Get In Touch</h2>
+                <p class="section-subtitle">Let's discuss how I can drive technology leadership for your organization.</p>
+                <div class="line"></div>
+            </div>
+
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <h3>Contact Details</h3>
+                    <p>Open for principal backend engineering roles, technical advisory, and high-impact enterprise consulting.</p>
+                    
+                    <div class="info-item">
+                        <i class="fa-solid fa-envelope"></i>
+                        <div>
+                            <strong>Email</strong>
+                            <p>julius.mwangi@techguru.co.ke</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <div>
+                            <strong>Location</strong>
+                            <p>Nairobi, Kenya (Global Remote Available)</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fa-brands fa-linkedin"></i>
+                        <div>
+                            <strong>LinkedIn</strong>
+                            <p>linkedin.com/in/julius-mwangi</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <form id="contactForm">
+                        <div id="formAlert" class="alert hidden"></div>
+                        
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" required placeholder="e.g. Sarah Jenkins">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Work Email *</label>
+                            <input type="email" id="email" name="email" required placeholder="e.g. s.jenkins@company.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject">Subject *</label>
+                            <input type="text" id="subject" name="subject" required placeholder="e.g. Enterprise Architecture Consulting">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Message *</label>
+                            <textarea id="message" name="message" rows="5" required placeholder="Describe your inquiry or platform needs..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
+                            <span>Send Message</span>
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <p>&copy; <span id="year"></span> Julius Mwangi. All rights reserved. Enterprise Software & Architecture.</p>
+            <div class="footer-links">
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#projects">Projects</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Navigation Toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Dynamic Projects Loader
+        let allProjects = [];
+
+        async function fetchProjects() {
+            const container = document.getElementById('projectsContainer');
+            try {
+                const response = await fetch('/api/projects');
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    allProjects = result.data;
+                    renderProjects(allProjects);
+                } else {
+                    container.innerHTML = '<p class="error-msg">Failed to load projects.</p>';
+                }
+            } catch (err) {
+                container.innerHTML = '<p class="error-msg">Error connecting to server API.</p>';
+            }
+        }
+
+        function renderProjects(projects) {
+            const container = document.getElementById('projectsContainer');
+            if (!projects.length) {
+                container.innerHTML = '<p>No projects found in this category.</p>';
+                return;
+            }
+
+            container.innerHTML = projects.map(proj => `
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-icon">
+                            <i class="fa-solid ${proj.icon}"></i>
+                        </div>
+                        <span class="project-cat">${proj.category}</span>
+                    </div>
+                    <h3 class="project-title">${proj.title}</h3>
+                    <p class="project-desc">${proj.description}</p>
+                    <div class="project-tech">
+                        ${proj.technologies.split(',').map(tech => `<span class="tech-tag">${tech.trim()}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Project Filter Buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+
+                const filter = e.target.getAttribute('data-filter');
+                if (filter === 'all') {
+                    renderProjects(allProjects);
+                } else {
+                    const filtered = allProjects.filter(p => p.category.toLowerCase() === filter.toLowerCase());
+                    renderProjects(filtered);
+                }
+            });
+        });
+
+        // Contact Form Submission (POST /api/contact)
+        const contactForm = document.getElementById('contactForm');
+        const formAlert = document.getElementById('formAlert');
+        const submitBtn = document.getElementById('submitBtn');
+
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>Sending...</span> <i class="fa-solid fa-spinner fa-spin"></i>';
+            formAlert.className = 'alert hidden';
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+
+            try {
+                const response = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.status === 'success') {
+                    formAlert.className = 'alert alert-success';
+                    formAlert.textContent = data.message;
+                    contactForm.reset();
+                } else {
+                    formAlert.className = 'alert alert-error';
+                    formAlert.textContent = data.message || 'An error occurred. Please try again.';
+                }
+            } catch (error) {
+                formAlert.className = 'alert alert-error';
+                formAlert.textContent = 'Network error. Failed to send message.';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>Send Message</span> <i class="fa-solid fa-paper-plane"></i>';
+            }
+        });
+
+        // Initial Load
+        fetchProjects();
+    </script>
+</body>
+</html>

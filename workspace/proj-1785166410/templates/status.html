@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wi-Fi Connection Status</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="portal-container">
+        <div class="portal-card status-card">
+            
+            {% if not is_expired and session.status == 'ACTIVE' %}
+            <div class="status-header success">
+                <div class="status-icon">✓</div>
+                <h2>You are Connected!</h2>
+                <p>Internet Access Granted</p>
+            </div>
+
+            <div class="timer-box">
+                <span class="timer-label">Time Remaining</span>
+                <div id="countdown-display" class="countdown-timer">--:--</div>
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span class="label">Session ID:</span>
+                    <span class="value">{{ session.id }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Zone:</span>
+                    <span class="value">{{ session.zone_id }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Device MAC:</span>
+                    <span class="value">{{ session.mac_address }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">IP Address:</span>
+                    <span class="value">{{ session.ip_address }}</span>
+                </div>
+            </div>
+
+            <form action="/disconnect/{{ session.id }}" method="POST">
+                <button type="submit" class="btn-submit btn-danger">Disconnect Network</button>
+            </form>
+
+            {% else %}
+            <div class="status-header expired">
+                <div class="status-icon">✕</div>
+                <h2>Session Expired</h2>
+                <p>Your connection time limit has been reached.</p>
+            </div>
+
+            <a href="/portal/{{ session.zone_id }}" class="btn-submit">Reconnect Now</a>
+            {% endif %}
+
+        </div>
+    </div>
+
+    {% if not is_expired and session.status == 'ACTIVE' %}
+    <script>
+        let remainingSeconds = {{ remaining_seconds }};
+        function updateTimer() {
+            if (remainingSeconds <= 0) {
+                window.location.reload();
+                return;
+            }
+            let mins = Math.floor(remainingSeconds / 60);
+            let secs = remainingSeconds % 60;
+            document.getElementById('countdown-display').innerText = 
+                (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+            remainingSeconds--;
+        }
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    </script>
+    {% endif %}
+</body>
+</html>

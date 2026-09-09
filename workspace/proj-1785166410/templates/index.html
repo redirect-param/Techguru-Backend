@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captive Portal - Guest Wi-Fi Access</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="portal-container">
+        <div class="portal-card">
+            <div class="portal-header">
+                <div class="wifi-icon">
+                    <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="2" fill="none">
+                        <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                        <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                        <line x1="12" y1="20" x2="12.01" y2="20" stroke-width="3"></line>
+                    </svg>
+                </div>
+                <h2>Guest Wi-Fi Network</h2>
+                <span class="zone-badge">{{ zone.name }}</span>
+            </div>
+
+            {% if error %}
+            <div class="alert alert-danger">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <div class="tab-buttons">
+                <button class="tab-btn active" id="tab-btn-email" onclick="switchTab('email')">Email Register</button>
+                <button class="tab-btn" id="tab-btn-voucher" onclick="switchTab('voucher')">Voucher Code</button>
+            </div>
+
+            <!-- Email Registration Form -->
+            <form id="form-email" class="auth-form active" action="/login" method="POST">
+                <input type="hidden" name="auth_type" value="email">
+                <input type="hidden" name="zone_id" value="{{ zone_id }}">
+                <input type="hidden" name="mac" value="{{ mac }}">
+                <input type="hidden" name="ip" value="{{ ip }}">
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="user@example.com" required>
+                </div>
+
+                <div class="form-checkbox">
+                    <input type="checkbox" id="terms" name="terms_accepted" required>
+                    <label for="terms">I accept the <a href="/terms" target="_blank">Terms of Service</a> & Privacy Policy.</label>
+                </div>
+
+                <button type="submit" class="btn-submit">Connect to Wi-Fi</button>
+            </form>
+
+            <!-- Voucher Code Form -->
+            <form id="form-voucher" class="auth-form" action="/login" method="POST">
+                <input type="hidden" name="auth_type" value="voucher">
+                <input type="hidden" name="zone_id" value="{{ zone_id }}">
+                <input type="hidden" name="mac" value="{{ mac }}">
+                <input type="hidden" name="ip" value="{{ ip }}">
+
+                <div class="form-group">
+                    <label for="voucher_code">Pass / Voucher Code</label>
+                    <div class="input-with-action">
+                        <input type="text" id="voucher_code" name="voucher_code" placeholder="e.g. WIFI-1001" style="text-transform: uppercase;">
+                        <button type="button" class="btn-verify" onclick="checkVoucher()">Verify</button>
+                    </div>
+                    <small id="voucher-status-msg" class="status-msg"></small>
+                </div>
+
+                <button type="submit" class="btn-submit">Redeem & Connect</button>
+            </form>
+
+            <div class="device-details">
+                <p>MAC: <code>{{ mac }}</code> | IP: <code>{{ ip }}</code></p>
+                <p class="zone-info">Speed: {{ zone.speed }} &bull; Access: {{ zone.limit }}</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

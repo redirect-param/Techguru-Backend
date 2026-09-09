@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captive Portal - Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="admin-body">
+    <div class="admin-container">
+        <header class="admin-header">
+            <h1>Captive Portal Administration</h1>
+            <a href="/" class="btn-link">View Portal</a>
+        </header>
+
+        <div class="admin-grid">
+            <!-- Voucher Generator -->
+            <div class="admin-card">
+                <h3>Generate Voucher Code</h3>
+                <form action="/admin" method="POST" class="admin-form">
+                    <input type="hidden" name="action" value="generate_voucher">
+                    <div class="form-group">
+                        <label for="duration">Duration (Minutes)</label>
+                        <select name="duration" id="duration">
+                            <option value="15">15 Minutes</option>
+                            <option value="30">30 Minutes</option>
+                            <option value="60" selected>1 Hour</option>
+                            <option value="120">2 Hours</option>
+                            <option value="1440">24 Hours</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-submit">Create Voucher</button>
+                </form>
+
+                <h4>Recent Vouchers</h4>
+                <ul class="data-list">
+                    {% for v in vouchers %}
+                    <li>
+                        <span class="code"><code>{{ v.code }}</code></span>
+                        <span>{{ v.duration_minutes }} mins</span>
+                        <span class="badge {{ 'used' if v.is_used else 'active' }}">
+                            {{ 'Used' if v.is_used else 'Available' }}
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Active Sessions -->
+            <div class="admin-card">
+                <h3>Active Network Sessions ({{ active_sessions|length }})</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Session ID</th>
+                                <th>Identity</th>
+                                <th>Zone</th>
+                                <th>Expires At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in active_sessions %}
+                            <tr>
+                                <td><code>{{ s.id }}</code></td>
+                                <td>{{ s.user_email or s.voucher_code or s.mac_address }}</td>
+                                <td>{{ s.zone_id }}</td>
+                                <td>{{ s.expires_at }}</td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="4">No active sessions.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>Recent Audit Logs</h4>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Action</th>
+                                <th>Session</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in logs %}
+                            <tr>
+                                <td>{{ log.timestamp }}</td>
+                                <td>{{ log.action }}</td>
+                                <td><code>{{ log.session_id }}</code></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

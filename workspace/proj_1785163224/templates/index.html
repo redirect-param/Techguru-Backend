@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gitongu High School | Academic Excellence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#" class="brand-logo">
+                <span class="logo-mark">GHS</span>
+                <span class="logo-text">Gitongu High</span>
+            </a>
+            <nav class="nav-links">
+                <a href="#about">About</a>
+                <a href="#academics">Academics</a>
+                <a href="#staff">Faculty</a>
+                <a href="#fees">Fee Structure</a>
+                <a href="#news">News</a>
+                <a href="#admissions" class="btn-link">Apply Now</a>
+            </nav>
+            <button class="portal-trigger-btn" onclick="openPortalModal()">Student Portal</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-badge">Nurturing Leaders & Innovators</div>
+            <h1 class="hero-title">Shaping Tomorrow Through Knowledge & Discipline</h1>
+            <p class="hero-subtitle">Gitongu High School delivers world-class secondary education focused on academic rigor, character building, and technological literacy.</p>
+            <div class="hero-cta-group">
+                <a href="#admissions" class="btn btn-primary">Apply for 2025 Intake</a>
+                <a href="#academics" class="btn btn-secondary">Explore Subjects</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-num">98%</span>
+                    <span class="stat-label">University Transition</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">1:15</span>
+                    <span class="stat-label">Teacher-Student Ratio</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">100%</span>
+                    <span class="stat-label">STEM Integration</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container grid-2">
+            <div class="section-text">
+                <span class="section-label">Who We Are</span>
+                <h2>A Legacy of Educational Distinction</h2>
+                <p>Founded on values of integrity, diligence, and service, Gitongu High School provides a supportive and modern learning environment where young minds flourish.</p>
+                <div class="values-list">
+                    <div class="value-card">
+                        <h4>Academic Rigor</h4>
+                        <p>Comprehensive KCSE curriculum supplemented with practical STEM labs and digital literacy.</p>
+                    </div>
+                    <div class="value-card">
+                        <h4>Holistic Growth</h4>
+                        <p>Vibrant sports, creative arts, and leadership programs to cultivate complete individuals.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="about-card-visual">
+                <div class="quote-box">
+                    <p>"Education is the master key that unlocks potential and transforms communities."</p>
+                    <span class="quote-author">— Dr. Samuel Gitongu, Principal</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Academics & Subjects -->
+    <section id="academics" class="section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Curriculum</span>
+                <h2>Academic Subjects & Departments</h2>
+                <p>Designed to equip students for global competitive environments.</p>
+            </div>
+            <div class="grid-cards" id="subjects-grid">
+                <!-- Dynamically Populated -->
+                <div class="loader">Loading subjects...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Faculty & Staff -->
+    <section id="staff" class="section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Leadership</span>
+                <h2>Our Experienced Faculty</h2>
+                <p>Dedicated educators committed to academic and personal excellence.</p>
+            </div>
+            <div class="grid-cards" id="staff-grid">
+                <!-- Dynamically Populated -->
+                <div class="loader">Loading faculty...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fee Structure -->
+    <section id="fees" class="section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Transparency</span>
+                <h2>Fee Structure (Per Annum)</h2>
+                <p>Clear and competitive breakdown with flexible payment plans.</p>
+            </div>
+            <div class="table-responsive">
+                <table class="minimal-table">
+                    <thead>
+                        <tr>
+                            <th>Class Level</th>
+                            <th>Tuition Fee</th>
+                            <th>Boarding</th>
+                            <th>Activities</th>
+                            <th>Development</th>
+                            <th>Total (KSh)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fee-table-body">
+                        <!-- Dynamically Populated -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- News & Events -->
+    <section id="news" class="section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Updates</span>
+                <h2>Latest School News & Events</h2>
+            </div>
+            <div class="grid-cards" id="news-grid">
+                <!-- Dynamically Populated -->
+                <div class="loader">Loading updates...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admissions Form -->
+    <section id="admissions" class="section bg-dark text-white">
+        <div class="container grid-2">
+            <div>
+                <span class="section-label text-accent">Enrollment</span>
+                <h2>Apply for Admission</h2>
+                <p>Complete the application form below. Our admissions board will evaluate your submission and get back to you within 48 hours.</p>
+                <div class="contact-info-list">
+                    <p><strong>Admissions Office:</strong> admissions@gitonguhigh.ac.ke</p>
+                    <p><strong>Inquiries:</strong> +254 (0) 700 000 000</p>
+                    <p><strong>Campus Location:</strong> Central Highlands, Kenya</p>
+                </div>
+            </div>
+            <div class="form-container">
+                <form id="admissionForm" onsubmit="handleAdmissionSubmit(event)">
+                    <div class="form-group">
+                        <label for="applicant_name">Student's Full Name</label>
+                        <input type="text" id="applicant_name" required placeholder="e.g. Jane Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="parent_email">Parent/Guardian Email</label>
+                        <input type="email" id="parent_email" required placeholder="parent@example.com">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="parent_phone">Phone Number</label>
+                            <input type="tel" id="parent_phone" required placeholder="+254 712 345678">
+                        </div>
+                        <div class="form-group">
+                            <label for="target_form">Class Applying For</label>
+                            <select id="target_form" required>
+                                <option value="Form 1">Form 1</option>
+                                <option value="Form 2">Form 2</option>
+                                <option value="Form 3">Form 3</option>
+                                <option value="Form 4">Form 4</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="kcpe_marks">KCPE / Assessment Score</label>
+                        <input type="number" id="kcpe_marks" min="0" max="500" required placeholder="e.g. 365">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">Submit Application</button>
+                    <div id="admissionResponse" class="form-response"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <p>&copy; 2025 Gitongu High School. All rights reserved.</p>
+            <p class="footer-sub">Designed for modern minimal excellence.</p>
+        </div>
+    </footer>
+
+    <!-- Student Portal Modal -->
+    <div class="modal-overlay" id="portalModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closePortalModal()">&times;</button>
+            <h3>Student Fee & Status Portal</h3>
+            <p class="modal-desc">Enter your Registration Number to check student status and fee balance.</p>
+            <form onsubmit="handlePortalLookup(event)">
+                <div class="form-group">
+                    <label for="portalRegNo">Registration Number</label>
+                    <input type="text" id="portalRegNo" required placeholder="e.g. GHS/2023/001">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Lookup Record</button>
+            </form>
+            <div id="portalResult" class="portal-result"></div>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

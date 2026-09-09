@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechGuru - Inventory Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+    
+    <!-- Top Navigation Bar -->
+    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-indigo-600 rounded-lg text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                </div>
+                <span class="font-bold text-xl tracking-tight text-indigo-400">TechGuru <span class="text-slate-200">Inventory</span></span>
+            </div>
+            <nav class="flex space-x-2">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn active">Dashboard</button>
+                <button onclick="switchTab('products')" id="nav-products" class="nav-btn">Products</button>
+                <button onclick="switchTab('categories')" id="nav-categories" class="nav-btn">Categories & Suppliers</button>
+                <button onclick="switchTab('logs')" id="nav-logs" class="nav-btn">Transaction Logs</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- DASHBOARD TAB -->
+        <section id="tab-dashboard" class="tab-content space-y-6">
+            <!-- Low Stock Banner -->
+            <div id="low-stock-alert" class="hidden bg-rose-900/40 border border-rose-500/50 rounded-xl p-4 flex items-start justify-between">
+                <div class="flex items-center space-x-3">
+                    <span class="text-rose-400 p-2 bg-rose-900/60 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    </span>
+                    <div>
+                        <h4 class="font-semibold text-rose-200">Stock Alert Warning</h4>
+                        <p class="text-sm text-rose-300/80" id="low-stock-msg"></p>
+                    </div>
+                </div>
+                <button onclick="switchTab('products')" class="text-xs bg-rose-600 hover:bg-rose-500 text-white font-medium px-3 py-1.5 rounded-md transition">Review Items</button>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+                <div class="stat-card">
+                    <span class="text-slate-400 text-sm font-medium">Total Products</span>
+                    <div class="text-3xl font-extrabold mt-1 text-slate-100" id="stat-products">0</div>
+                </div>
+                <div class="stat-card border-l-4 border-rose-500">
+                    <span class="text-slate-400 text-sm font-medium">Low Stock Alerts</span>
+                    <div class="text-3xl font-extrabold mt-1 text-rose-400" id="stat-lowstock">0</div>
+                </div>
+                <div class="stat-card">
+                    <span class="text-slate-400 text-sm font-medium">Total Inventory Value</span>
+                    <div class="text-3xl font-extrabold mt-1 text-emerald-400" id="stat-value">$0.00</div>
+                </div>
+                <div class="stat-card">
+                    <span class="text-slate-400 text-sm font-medium">Stock Movements</span>
+                    <div class="text-3xl font-extrabold mt-1 text-indigo-400" id="stat-movements">0</div>
+                </div>
+            </div>
+
+            <!-- Dashboard Content Split -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Critical Stock Panel -->
+                <div class="bg-slate-800/80 rounded-xl border border-slate-700/60 p-5 shadow-lg">
+                    <h3 class="text-lg font-bold text-slate-200 mb-4 flex items-center justify-between">
+                        <span>Low Stock Priority List</span>
+                        <span class="text-xs bg-rose-500/20 text-rose-400 px-2 py-1 rounded">Requires Action</span>
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="text-xs text-slate-400 uppercase bg-slate-900/50">
+                                <tr>
+                                    <th class="p-3">Item</th>
+                                    <th class="p-3">Current</th>
+                                    <th class="p-3">Min</th>
+                                    <th class="p-3 text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dash-low-stock-table" class="divide-y divide-slate-700/50">
+                                <tr><td colspan="4" class="p-4 text-center text-slate-500">Loading alerts...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Panel -->
+                <div class="bg-slate-800/80 rounded-xl border border-slate-700/60 p-5 shadow-lg">
+                    <h3 class="text-lg font-bold text-slate-200 mb-4">Recent Transactions</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="text-xs text-slate-400 uppercase bg-slate-900/50">
+                                <tr>
+                                    <th class="p-3">Product</th>
+                                    <th class="p-3">Type</th>
+                                    <th class="p-3">Qty</th>
+                                    <th class="p-3">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dash-recent-movements" class="divide-y divide-slate-700/50">
+                                <tr><td colspan="4" class="p-4 text-center text-slate-500">Loading transactions...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCTS TAB -->
+        <section id="tab-products" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between gap-4 items-center">
+                <input type="text" id="product-search" oninput="filterProducts()" placeholder="Search by name or SKU..." class="input-field max-w-xs">
+                <button onclick="openProductModal()" class="btn-primary flex items-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    <span>Add New Product</span>
+                </button>
+            </div>
+
+            <div class="bg-slate-800/80 rounded-xl border border-slate-700/60 overflow-hidden shadow-lg">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="text-xs text-slate-400 uppercase bg-slate-900/80 border-b border-slate-700">
+                            <tr>
+                                <th class="p-4">SKU</th>
+                                <th class="p-4">Name</th>
+                                <th class="p-4">Category</th>
+                                <th class="p-4">Supplier</th>
+                                <th class="p-4">Stock</th>
+                                <th class="p-4">Unit Price</th>
+                                <th class="p-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-table-body" class="divide-y divide-slate-700/50">
+                            <!-- Injected JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- CATEGORIES & SUPPLIERS TAB -->
+        <section id="tab-categories" class="tab-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Categories Card -->
+            <div class="bg-slate-800/80 rounded-xl border border-slate-700/60 p-5 shadow-lg space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-slate-200">Categories</h3>
+                    <button onclick="openCategoryModal()" class="btn-secondary text-xs">+ Category</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="text-xs text-slate-400 uppercase bg-slate-900/50">
+                            <tr>
+                                <th class="p-3">Name</th>
+                                <th class="p-3">Description</th>
+                                <th class="p-3 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categories-table-body" class="divide-y divide-slate-700/50"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Suppliers Card -->
+            <div class="bg-slate-800/80 rounded-xl border border-slate-700/60 p-5 shadow-lg space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-slate-200">Suppliers</h3>
+                    <button onclick="openSupplierModal()" class="btn-secondary text-xs">+ Supplier</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="text-xs text-slate-400 uppercase bg-slate-900/50">
+                            <tr>
+                                <th class="p-3">Name</th>
+                                <th class="p-3">Contact Email</th>
+                                <th class="p-3 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="suppliers-table-body" class="divide-y divide-slate-700/50"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- LOGS TAB -->
+        <section id="tab-logs" class="tab-content hidden space-y-6">
+            <div class="bg-slate-800/80 rounded-xl border border-slate-700/60 overflow-hidden shadow-lg">
+                <div class="p-4 border-b border-slate-700/60">
+                    <h3 class="text-lg font-bold text-slate-200">Stock Movement Audit Trail</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="text-xs text-slate-400 uppercase bg-slate-900/80 border-b border-slate-700">
+                            <tr>
+                                <th class="p-4">Timestamp</th>
+                                <th class="p-4">Product</th>
+                                <th class="p-4">SKU</th>
+                                <th class="p-4">Type</th>
+                                <th class="p-4">Quantity</th>
+                                <th class="p-4">Note</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logs-table-body" class="divide-y divide-slate-700/50"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODALS -->
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="modal-backdrop hidden">
+        <div class="modal-box">
+            <h3 class="text-xl font-bold mb-4 text-slate-100" id="product-modal-title">Add Product</h3>
+            <form id="product-form" onsubmit="saveProduct(event)" class="space-y-4">
+                <input type="hidden" id="product-id">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Product Name</label>
+                    <input type="text" id="product-name" required class="input-field">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">SKU</label>
+                        <input type="text" id="product-sku" required class="input-field">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Unit Price ($)</label>
+                        <input type="number" step="0.01" id="product-price" required class="input-field">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Category</label>
+                        <select id="product-category" class="input-field"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Supplier</label>
+                        <select id="product-supplier" class="input-field"></select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Initial Quantity</label>
+                        <input type="number" id="product-qty" min="0" value="0" class="input-field">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Min Alert Level</label>
+                        <input type="number" id="product-min" min="0" value="5" class="input-field">
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" onclick="closeModal('product-modal')" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Stock Adjust Modal -->
+    <div id="adjust-modal" class="modal-backdrop hidden">
+        <div class="modal-box">
+            <h3 class="text-xl font-bold mb-1 text-slate-100">Stock Adjustment</h3>
+            <p class="text-sm text-slate-400 mb-4" id="adjust-product-name"></p>
+            <form id="adjust-form" onsubmit="saveStockAdjustment(event)" class="space-y-4">
+                <input type="hidden" id="adjust-product-id">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Movement Type</label>
+                    <select id="adjust-type" class="input-field">
+                        <option value="IN">Stock IN (+ Add)</option>
+                        <option value="OUT">Stock OUT (- Remove)</option>
+                        <option value="ADJUSTMENT">Override Total Quantity</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Quantity</label>
+                    <input type="number" id="adjust-qty" min="0" required class="input-field">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Reason / Note</label>
+                    <input type="text" id="adjust-note" placeholder="e.g. Received PO-102 or Damaged goods" class="input-field">
+                </div>
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" onclick="closeModal('adjust-modal')" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Confirm Adjustment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Category Modal -->
+    <div id="category-modal" class="modal-backdrop hidden">
+        <div class="modal-box">
+            <h3 class="text-xl font-bold mb-4 text-slate-100">Add Category</h3>
+            <form onsubmit="saveCategory(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Name</label>
+                    <input type="text" id="cat-name" required class="input-field">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Description</label>
+                    <input type="text" id="cat-desc" class="input-field">
+                </div>
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" onclick="closeModal('category-modal')" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Supplier Modal -->
+    <div id="supplier-modal" class="modal-backdrop hidden">
+        <div class="modal-box">
+            <h3 class="text-xl font-bold mb-4 text-slate-100">Add Supplier</h3>
+            <form onsubmit="saveSupplier(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Supplier Name</label>
+                    <input type="text" id="sup-name" required class="input-field">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Email</label>
+                    <input type="email" id="sup-email" class="input-field">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Phone</label>
+                    <input type="text" id="sup-phone" class="input-field">
+                </div>
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" onclick="closeModal('supplier-modal')" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Supplier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

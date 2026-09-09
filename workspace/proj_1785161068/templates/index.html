@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copia Kenya - Everyday Essential Delivery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <!-- Top Announcement Bar -->
+    <div class="top-bar">
+        <span><i class="fa-solid fa-truck-fast"></i> Free Delivery to Your Local Copia Agent!</span>
+        <span><i class="fa-solid fa-phone"></i> M-Pesa Express Checkout Available</span>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo-container" onclick="showSection('shop')">
+                <span class="logo-icon"><i class="fa-solid fa-basket-shopping"></i></span>
+                <span class="logo-text">COPIA</span>
+                <span class="badge-tag">KENYA</span>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search solar, fertilizer, electronics..." onkeyup="filterProducts()">
+                <button><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+
+            <div class="nav-actions">
+                <div class="user-profile" id="userMenuBtn" onclick="toggleUserDropdown()">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span id="navUsername">Account</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                
+                <div class="dropdown-menu" id="userDropdown">
+                    <div id="authLinks">
+                        <a href="#" onclick="openModal('authModal')"><i class="fa-solid fa-right-to-bracket"></i> Login / Register</a>
+                    </div>
+                    <div id="userLinks" style="display: none;">
+                        <a href="#" onclick="showSection('orders')"><i class="fa-solid fa-box-archive"></i> My Orders</a>
+                        <a href="#" id="adminTabLink" onclick="showSection('admin')" style="display:none;"><i class="fa-solid fa-user-gear"></i> Admin Dashboard</a>
+                        <hr>
+                        <a href="#" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+                    </div>
+                </div>
+
+                <div class="cart-btn" onclick="toggleCartDrawer()">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-badge" id="cartCount">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-layout">
+
+        <!-- SHOP SECTION -->
+        <section id="shopSection" class="active-section">
+            <div class="hero-banner">
+                <div class="hero-content">
+                    <h1>Quality Rural & Urban Shopping Delivered Fast</h1>
+                    <p>Order Agriculture, Solar, Electronics, and Home Products directly to your nearest agent using M-Pesa!</p>
+                    <button class="btn-primary" onclick="scrollToCatalog()">Shop Now <i class="fa-solid fa-arrow-down"></i></button>
+                </div>
+            </div>
+
+            <div class="catalog-header" id="catalogHead">
+                <h2>Browse Categories</h2>
+                <div class="category-pills">
+                    <button class="pill active" onclick="filterCategory('All')">All Products</button>
+                    <button class="pill" onclick="filterCategory('Agriculture')"><i class="fa-solid fa-wheat-awn"></i> Agriculture</button>
+                    <button class="pill" onclick="filterCategory('Electronics')"><i class="fa-solid fa-bolt"></i> Electronics</button>
+                    <button class="pill" onclick="filterCategory('Home Appliances')"><i class="fa-solid fa-house"></i> Home</button>
+                    <button class="pill" onclick="filterCategory('Construction')"><i class="fa-solid fa-faucet-drip"></i> Construction</button>
+                </div>
+            </div>
+
+            <div class="product-grid" id="productGrid">
+                <!-- Products dynamically rendered here -->
+            </div>
+        </section>
+
+        <!-- ORDERS SECTION -->
+        <section id="ordersSection" class="hidden-section">
+            <div class="section-title">
+                <h2><i class="fa-solid fa-receipt"></i> Order History</h2>
+            </div>
+            <div id="ordersList" class="orders-list">
+                <!-- Orders dynamically rendered -->
+            </div>
+        </section>
+
+        <!-- ADMIN DASHBOARD SECTION -->
+        <section id="adminSection" class="hidden-section">
+            <div class="section-title">
+                <h2><i class="fa-solid fa-user-gear"></i> Copia Merchant & Admin Center</h2>
+            </div>
+
+            <div class="admin-grid">
+                <div class="admin-card">
+                    <h3>Add New Product</h3>
+                    <form id="addProductForm" onsubmit="handleAddProduct(event)">
+                        <div class="form-group">
+                            <label>Product Name</label>
+                            <input type="text" id="prodName" required placeholder="e.g. Solar Lamp 50W">
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="prodCategory" required>
+                                <option value="Agriculture">Agriculture</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Home Appliances">Home Appliances</option>
+                                <option value="Construction">Construction</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Price (KES)</label>
+                            <input type="number" id="prodPrice" required placeholder="2500">
+                        </div>
+                        <div class="form-group">
+                            <label>Stock Quantity</label>
+                            <input type="number" id="prodStock" value="50" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Image URL</label>
+                            <input type="url" id="prodImage" placeholder="https://images.unsplash.com/...">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="prodDesc" rows="3" placeholder="Brief details about product"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary full-width">Save Product</button>
+                    </form>
+                </div>
+
+                <div class="admin-card">
+                    <h3>All Store Orders</h3>
+                    <div id="adminOrdersList">
+                        <!-- Admin Orders List -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCartDrawer()"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h3><i class="fa-solid fa-cart-shopping"></i> Shopping Cart</h3>
+            <span class="close-btn" onclick="toggleCartDrawer()">&times;</span>
+        </div>
+        <div class="cart-body" id="cartItemsContainer">
+            <!-- Dynamic Cart Items -->
+        </div>
+        <div class="cart-footer">
+            <div class="total-row">
+                <span>Total Amount:</span>
+                <span id="cartTotalAmount">KES 0</span>
+            </div>
+            <button class="btn-primary full-width" onclick="startCheckout()"><i class="fa-solid fa-lock"></i> Proceed to M-Pesa Checkout</button>
+        </div>
+    </div>
+
+    <!-- Auth Modal (Login / Register) -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-card">
+            <span class="close-modal" onclick="closeModal('authModal')">&times;</span>
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="loginTabBtn" onclick="switchAuthTab('login')">Login</button>
+                <button class="auth-tab" id="registerTabBtn" onclick="switchAuthTab('register')">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="loginPhone" placeholder="0712345678" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary full-width">Sign In</button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="hidden" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="regName" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number (M-Pesa registered)</label>
+                    <input type="text" id="regPhone" placeholder="0712345678" required>
+                </div>
+                <div class="form-group">
+                    <label>Email (Optional)</label>
+                    <input type="email" id="regEmail" placeholder="john@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary full-width">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- M-PESA Checkout Modal -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="modal-card">
+            <span class="close-modal" onclick="closeModal('checkoutModal')">&times;</span>
+            <div class="checkout-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/M-PESA_LOGO-01.svg" alt="M-Pesa Logo" class="mpesa-logo">
+                <h3>Pay via M-Pesa Express</h3>
+            </div>
+            
+            <div id="checkoutStep1">
+                <div class="form-group">
+                    <label>Delivery Point / Agent Location</label>
+                    <input type="text" id="deliveryLocation" value="Main Market Copia Agent #402" required>
+                </div>
+                <div class="form-group">
+                    <label>M-Pesa Phone Number</label>
+                    <input type="text" id="mpesaPhone" placeholder="254712345678" required>
+                    <small>An STK push notification will be sent to this line.</small>
+                </div>
+                <div class="amount-badge">
+                    <span>Payable Total:</span>
+                    <strong id="mpesaTotalBadge">KES 0</strong>
+                </div>
+                <button class="btn-mpesa full-width" onclick="triggerMpesaPush()"><i class="fa-solid fa-mobile-screen-button"></i> Send STK Push Prompt</button>
+            </div>
+
+            <!-- Loading / Processing View -->
+            <div id="checkoutStep2" class="hidden text-center">
+                <div class="spinner"></div>
+                <h4>STK Push Sent to your Phone!</h4>
+                <p>Please enter your M-Pesa PIN on your phone to complete payment.</p>
+                
+                <div class="simulation-box">
+                    <p><small>Testing on Sandbox without phone prompt?</small></p>
+                    <button class="btn-secondary" id="simPayBtn" onclick="simulatePaymentCompletion()"><i class="fa-solid fa-circle-check"></i> Simulate Instant Payment Success</button>
+                </div>
+            </div>
+
+            <!-- Payment Success View -->
+            <div id="checkoutStep3" class="hidden text-center">
+                <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+                <h3>Payment Received!</h3>
+                <p>M-Pesa Receipt: <strong id="receiptCode">QHK88921CP</strong></p>
+                <p>Your order is now being processed for delivery.</p>
+                <button class="btn-primary full-width" onclick="finishCheckout()"><i class="fa-solid fa-box"></i> View My Orders</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: techguru-backend
+    env: python
+    plan: starter
+    region: oregon
+    branch: main
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn --worker-class eventlet -w 1 app:app"
+    healthCheckPath: /api/health
+    autoDeploy: true
+    
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.11.9
+
+    disk:
+      name: techguru-workspace
+      mountPath: /opt/render/project/src/workspace
+      sizeGB: 10
